@@ -38,12 +38,19 @@ export function StatCard({
         )}
         {statBadgeValue && (
           <span className={cn(
-            "text-xs font-medium px-2 py-1 rounded-full",
+            "flex items-center justify-center gap-1 text-xs font-medium px-2 py-1 rounded-full",
             statBadge === 'positive'
               ? "bg-success/10 text-success"
               : "bg-destructive/10 text-destructive"
           )}>
-            {statBadge === 'positive' ? '+' : '-'}{statBadgeValue}%
+            {statBadge === 'positive' ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 11V5H11"/><path d="M5 5L19 19"/>
+              </svg>
+            ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-move-down-right-icon lucide-move-down-right"><path d="M19 13V19H13" /><path d="M5 5L19 19" />
+                </svg>
+            )}
+            <span>{statBadgeValue}%</span>
           </span>
         )}
       </div>

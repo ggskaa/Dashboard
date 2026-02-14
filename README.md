@@ -33,3 +33,5 @@ Stack:
     Vite 7.3.1
 
     ESLint 9.39.1
+
+    recharts 3.7.0
