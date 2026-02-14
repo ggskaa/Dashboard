@@ -1,26 +1,23 @@
-import { useSidebar } from '../../contexts/sidebar-context'
+import { useSidebar } from '@/contexts/sidebar-context'
 import { 
   LayoutDashboard, 
   Link2, 
   BarChart3, 
   Settings,
   Users,
-  TrendingUp,
-  Target,
-  Zap,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react'
-import { cn } from '../../lib/utils'
-import DropdownMenu from '../common/Dropdown/DropdownMenu'
-import DropdownItem from '../common/Dropdown/DropdownItem'
-import DropdownHeader from '../common/Dropdown/DropdownHeader'
+import { cn } from '@/lib/utils'
+import  DropdownMenu  from '@/components/common/Dropdown/DropdownMenu'
+import  DropdownItem  from '@/components/common/Dropdown/DropdownItem'
+import  DropdownHeader  from '@/components/common/Dropdown/DropdownHeader'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 export function Sidebar() {
   const { isPinned, isExpanded, setHovering } = useSidebar()
-  const [openCategories, setOpenCategories] = useState(['main', 'analytics'])
+  const [openCategories, setOpenCategories] = useState(['main'])
 
   const toggleCategory = (category: string) => {
     setOpenCategories(prev => 
@@ -42,9 +39,10 @@ export function Sidebar() {
       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
   )
 
+  const categoryButtonClasses = 'w-full flex items-center justify-between px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors'
+
   return (
     <>
-      {/* hover only when not fixxed via button*/}
       {!isPinned && (
         <div 
           className="fixed left-0 top-0 w-1.5 h-full z-40 bg-transparent"
@@ -64,6 +62,7 @@ export function Sidebar() {
         onMouseEnter={() => !isPinned && setHovering(true)}
         onMouseLeave={() => !isPinned && setHovering(false)}
       >
+        {/* HEADER */}
         <div className={cn(
           'flex items-center h-16 border-b border-border shrink-0',
           isExpanded ? 'px-4 justify-start' : 'justify-center'
@@ -73,31 +72,32 @@ export function Sidebar() {
           </div>
           {isExpanded && (
             <span className="ml-3 text-lg font-semibold text-foreground whitespace-nowrap">
-              ReferralDash
+              Admin
             </span>
           )}
         </div>
-
         {/* nav */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden py-4">
-          {/* main*/}
           {!isExpanded ? (
             <div className="flex justify-center w-full">
               <DropdownMenu
                 trigger={
-                  <NavLink to="/dashboard" className={iconLinkClasses}>
+                  <NavLink to="/" className={iconLinkClasses}>
                     <LayoutDashboard size={22} />
                   </NavLink>
                 }
-                align="left"
-                side="bottom"
-                animation="scale"
               >
                 <DropdownHeader>Main</DropdownHeader>
                 <DropdownItem>
-                  <NavLink to="/dashboard" className={navLinkClasses}>
+                  <NavLink to="/" className={navLinkClasses}>
                     <LayoutDashboard size={16} />
                     <span>Dashboard</span>
+                  </NavLink>
+                </DropdownItem>
+                <DropdownItem>
+                  <NavLink to="/customers" className={navLinkClasses}>
+                    <Users size={16} />
+                    <span>Customers</span>
                   </NavLink>
                 </DropdownItem>
                 <DropdownItem>
@@ -116,207 +116,79 @@ export function Sidebar() {
             </div>
           ) : (
             <div className="px-3">
-              <button
-                onClick={() => toggleCategory('main')}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
+              <button onClick={() => toggleCategory('main')} className={categoryButtonClasses}>
                 <div className="flex items-center gap-3">
                   <LayoutDashboard size={18} />
                   <span>Main</span>
                 </div>
                 {openCategories.includes('main') ? (
-                  <ChevronDown size={16} className="transition-transform duration-200" />
+                  <ChevronDown size={16} />
                 ) : (
-                  <ChevronRight size={16} className="transition-transform duration-200" />
+                  <ChevronRight size={16} />
                 )}
               </button>
               
-              <div className={cn(
-                'ml-4 pl-2 border-l border-border space-y-1 overflow-hidden transition-all duration-200',
-                openCategories.includes('main') ? 'mt-2 h-auto' : 'h-0'
-              )}>
-                {openCategories.includes('main') && (
-                  <>
-                    <NavLink to="/dashboard" className={navLinkClasses}>
-                      <LayoutDashboard size={16} />
-                      <span>Dashboard</span>
-                    </NavLink>
-                    <NavLink to="/links" className={navLinkClasses}>
-                      <Link2 size={16} />
-                      <span>Links</span>
-                    </NavLink>
-                    <NavLink to="/analytics" className={navLinkClasses}>
-                      <BarChart3 size={16} />
-                      <span>Analytics</span>
-                    </NavLink>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* saas  cat (drop) */}
-          {!isExpanded ? (
-            <div className="flex justify-center w-full mt-1">
-              <DropdownMenu
-                trigger={
-                  <NavLink to="/growth" className={iconLinkClasses}>
-                    <TrendingUp size={22} />
+              {openCategories.includes('main') && (
+                <div className="ml-4 pl-2 border-l border-border space-y-1 mt-2">
+                  <NavLink to="/" className={navLinkClasses}>
+                    <LayoutDashboard size={16} />
+                    <span>Dashboard</span>
                   </NavLink>
-                }
-                align="left"
-                side="bottom"
-                animation="scale"
-              >
-                <DropdownHeader>SaaS Analytics</DropdownHeader>
-                <DropdownItem>
-                  <NavLink to="/growth" className={navLinkClasses}>
-                    <TrendingUp size={16} />
-                    <span>Growth</span>
-                    <span className="ml-auto text-xs bg-success/10 text-success px-1.5 py-0.5 rounded-full">+23%</span>
-                  </NavLink>
-                </DropdownItem>
-                <DropdownItem>
-                  <NavLink to="/users" className={navLinkClasses}>
+                  <NavLink to="/customers" className={navLinkClasses}>
                     <Users size={16} />
-                    <span>Users</span>
-                    <span className="ml-auto text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">1.2K</span>
+                    <span>Customers</span>
                   </NavLink>
-                </DropdownItem>
-                <DropdownItem>
-                  <NavLink to="/conversions" className={navLinkClasses}>
-                    <Target size={16} />
-                    <span>Conversions</span>
-                    <span className="ml-auto text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">3.4%</span>
+                  <NavLink to="/links" className={navLinkClasses}>
+                    <Link2 size={16} />
+                    <span>Links</span>
                   </NavLink>
-                </DropdownItem>
-                <DropdownItem>
-                  <NavLink to="/activity" className={navLinkClasses}>
-                    <Zap size={16} />
-                    <span>Activity</span>
+                  <NavLink to="/analytics" className={navLinkClasses}>
+                    <BarChart3 size={16} />
+                    <span>Analytics</span>
                   </NavLink>
-                </DropdownItem>
-              </DropdownMenu>
-            </div>
-          ) : (
-            <div className="px-3 mt-2">
-              <button
-                onClick={() => toggleCategory('analytics')}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <TrendingUp size={18} />
-                  <span>SaaS Analytics</span>
                 </div>
-                {openCategories.includes('analytics') ? (
-                  <ChevronDown size={16} className="transition-transform duration-200" />
-                ) : (
-                  <ChevronRight size={16} className="transition-transform duration-200" />
-                )}
-              </button>
-              
-              <div className={cn(
-                'ml-4 pl-2 border-l border-border space-y-1 overflow-hidden transition-all duration-200',
-                openCategories.includes('analytics') ? 'mt-2 h-auto' : 'h-0'
-              )}>
-                {openCategories.includes('analytics') && (
-                  <>
-                    <NavLink to="/growth" className={navLinkClasses}>
-                      <TrendingUp size={16} />
-                      <span>Growth</span>
-                      <span className="ml-auto text-xs bg-success/10 text-success px-1.5 py-0.5 rounded-full">+23%</span>
-                    </NavLink>
-                    <NavLink to="/users" className={navLinkClasses}>
-                      <Users size={16} />
-                      <span>Users</span>
-                      <span className="ml-auto text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">1.2K</span>
-                    </NavLink>
-                    <NavLink to="/conversions" className={navLinkClasses}>
-                      <Target size={16} />
-                      <span>Conversions</span>
-                      <span className="ml-auto text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">3.4%</span>
-                    </NavLink>
-                    <NavLink to="/activity" className={navLinkClasses}>
-                      <Zap size={16} />
-                      <span>Activity</span>
-                    </NavLink>
-                  </>
-                )}
-              </div>
+              )}
             </div>
           )}
-
-          {/* settings cat (drop)*/}
           {!isExpanded ? (
             <div className="flex justify-center w-full mt-1">
               <DropdownMenu
                 trigger={
-                  <NavLink to="/general" className={iconLinkClasses}>
+                  <NavLink to="/settings" className={iconLinkClasses}>
                     <Settings size={22} />
                   </NavLink>
                 }
-                align="left"
-                side="bottom"
-                animation="scale"
               >
                 <DropdownHeader>Settings</DropdownHeader>
                 <DropdownItem>
-                  <NavLink to="/general" className={navLinkClasses}>
+                  <NavLink to="/settings" className={navLinkClasses}>
                     <Settings size={16} />
-                    <span>General</span>
-                  </NavLink>
-                </DropdownItem>
-                <DropdownItem>
-                  <NavLink to="/team" className={navLinkClasses}>
-                    <Users size={16} />
-                    <span>Team</span>
-                  </NavLink>
-                </DropdownItem>
-                <DropdownItem>
-                  <NavLink to="/billing" className={navLinkClasses}>
-                    <BarChart3 size={16} />
-                    <span>Billing</span>
+                    <span>Settings</span>
                   </NavLink>
                 </DropdownItem>
               </DropdownMenu>
             </div>
           ) : (
             <div className="px-3 mt-2">
-              <button
-                onClick={() => toggleCategory('settings')}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
+              <button onClick={() => toggleCategory('settings')} className={categoryButtonClasses}>
                 <div className="flex items-center gap-3">
                   <Settings size={18} />
                   <span>Settings</span>
                 </div>
                 {openCategories.includes('settings') ? (
-                  <ChevronDown size={16} className="transition-transform duration-200" />
+                  <ChevronDown size={16} />
                 ) : (
-                  <ChevronRight size={16} className="transition-transform duration-200" />
+                  <ChevronRight size={16} />
                 )}
               </button>
-              <div className={cn(
-                'ml-4 pl-2 border-l border-border space-y-1 overflow-hidden transition-all duration-200',
-                openCategories.includes('settings') ? 'mt-2 h-auto' : 'h-0'
-              )}>
-                {openCategories.includes('settings') && (
-                  <>
-                    <NavLink to="/general" className={navLinkClasses}>
-                      <Settings size={16} />
-                      <span>General</span>
-                    </NavLink>
-                    <NavLink to="/team" className={navLinkClasses}>
-                      <Users size={16} />
-                      <span>Team</span>
-                    </NavLink>
-                    <NavLink to="/billing" className={navLinkClasses}>
-                      <BarChart3 size={16} />
-                      <span>Billing</span>
-                    </NavLink>
-                  </>
-                )}
-              </div>
+              {openCategories.includes('settings') && (
+                <div className="ml-4 pl-2 border-l border-border space-y-1 mt-2">
+                  <NavLink to="/settings" className={navLinkClasses}>
+                    <Settings size={16} />
+                    <span>Settings</span>
+                  </NavLink>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -336,6 +208,8 @@ export function Sidebar() {
           )}
         </div>
       </aside>
+
+      {/* спейсерок */}
       <div 
         className={cn(
           'transition-all duration-300 ease-out',
